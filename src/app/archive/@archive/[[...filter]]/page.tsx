@@ -12,24 +12,32 @@ export default function FilteredNewsPage({
 }: {
   params: { filter: string[] };
 }) {
-  const selectedYear = parseInt(params.filter?.[0]);
-  const selectedMonth = parseInt(params.filter?.[1]);
+  const selectedYear = params.filter?.[0];
+  const selectedMonth = params.filter?.[1];
 
   let news;
   let links = getAvailableNewsYears();
 
   if (selectedYear && !selectedMonth) {
-    news = getNewsForYear(selectedYear);
-    links = getAvailableNewsMonths(selectedYear);
+    news = getNewsForYear(+selectedYear);
+    links = getAvailableNewsMonths(+selectedYear);
   }
   if (selectedYear && selectedMonth) {
-    news = getNewsForYearAndMonth(selectedYear, selectedMonth);
+    news = getNewsForYearAndMonth(+selectedYear, +selectedMonth);
     links = [];
   }
 
   let newsContent = <p>No News found!</p>;
   if (news && news.length > 0) {
     newsContent = <NewsList news={news} />;
+  }
+
+  if (
+    (selectedYear && !getAvailableNewsYears().includes(+selectedYear)) ||
+    (selectedMonth &&
+      !getAvailableNewsMonths(+selectedYear).includes(+selectedMonth))
+  ) {
+    throw new Error("Invalid Filter.");
   }
 
   return (
