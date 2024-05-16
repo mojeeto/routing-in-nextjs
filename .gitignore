@@ -37,3 +37,6 @@ next-env.d.ts
 
 images/
 dummy-news.ts
+
+/backend/node_modules
+/backend/data.db
